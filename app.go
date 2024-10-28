@@ -6,10 +6,8 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
-	"github.com/joho/godotenv"
 	"log"
 	"net/http"
-	"os"
 )
 
 type App struct {
@@ -18,15 +16,13 @@ type App struct {
 }
 
 func (app *App) Initialise() error {
-	err_reading_from_env := godotenv.Load()
+	loadEnvVar("DB_USER")
+	loadEnvVar("DB_PASSWORD")
+	loadEnvVar("DB")
 
-	if err_reading_from_env != nil {
-		log.Fatalln("Error loading .env file")
-	}
-
-	db_user := os.Getenv("DB_USER")
-	db_password := os.Getenv("DB_PASSWORD")
-	db := os.Getenv("DB")
+	db_user := loadEnvVar("DB_USER")
+	db_password := loadEnvVar("DB_PASSWORD")
+	db := loadEnvVar("DB")
 
 	connectionString := fmt.Sprintf("%v:%v@tcp(localhost:3306)/%v", db_user, db_password, db)
 
