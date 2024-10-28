@@ -21,14 +21,15 @@ func getProducts(db *sql.DB) ([]products, error) {
 
 	for rows.Next() {
 		var p products
-
 		err := rows.Scan(&p.ID, &p.Name, &p.Quantity, &p.Price)
 
 		if err != nil {
 			return nil, err
 		}
+
 		product = append(product, p)
 
 	}
+
 	return product, nil
 }
