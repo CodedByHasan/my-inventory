@@ -52,11 +52,13 @@ func (p *product) createProduct(db *sql.DB) error {
 	if err != nil {
 		return err
 	}
+
 	id, err := result.LastInsertId()
 
 	if err != nil {
 		return err
 	}
+
 	p.ID = int(id)
 	return nil
 }
