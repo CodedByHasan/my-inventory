@@ -14,17 +14,17 @@ type product struct {
 
 func getProducts(db *sql.DB) ([]product, error) {
 	query := "SELECT id, name, quantity, price from products"
-	rows, err := db.Query(query)
 
+	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
-	products := []product{}
 
+	products := []product{}
 	for rows.Next() {
 		var p product
-		err := rows.Scan(&p.ID, &p.Name, &p.Quantity, &p.Price)
 
+		err := rows.Scan(&p.ID, &p.Name, &p.Quantity, &p.Price)
 		if err != nil {
 			return nil, err
 		}
@@ -37,8 +37,8 @@ func getProducts(db *sql.DB) ([]product, error) {
 func (p *product) getProduct(db *sql.DB) error {
 	query := fmt.Sprintf("SELECT name, quantity, price FROM products where id=%v", p.ID)
 	row := db.QueryRow(query)
-	err := row.Scan(&p.Name, &p.Quantity, &p.Price)
 
+	err := row.Scan(&p.Name, &p.Quantity, &p.Price)
 	if err != nil {
 		return err
 	}
@@ -47,14 +47,13 @@ func (p *product) getProduct(db *sql.DB) error {
 
 func (p *product) createProduct(db *sql.DB) error {
 	query := fmt.Sprintf("insert into products(name,quantity,price) values('%v', %v, %v)", p.Name, p.Quantity, p.Price)
-	result, err := db.Exec(query)
 
+	result, err := db.Exec(query)
 	if err != nil {
 		return err
 	}
 
 	id, err := result.LastInsertId()
-
 	if err != nil {
 		return err
 	}
