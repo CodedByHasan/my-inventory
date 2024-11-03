@@ -93,6 +93,30 @@ func (app *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	sendResponse(w, http.StatusOK, p)
 }
 
+func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	key, err := strconv.Atoi(vars["id"])
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "invalid product ID")
+		return
+	}
+
+	var p product
+	err = json.NewDecoder(r.Body).Decode(&p)
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	p.ID = key
+	err = p.updateProduct(app.DB)
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	sendResponse(w, http.StatusOK, p)
+}
+
 func sendResponse(w http.ResponseWriter, statusCode int, payload interface{}) {
 	response, _ := json.Marshal(payload)
 	w.Header().Set("Content-type", "application/json")
@@ -109,4 +133,5 @@ func (app *App) handleRoutes() {
 	app.Router.HandleFunc("/products", app.getProducts).Methods("GET")
 	app.Router.HandleFunc("/product/{id}", app.getProduct).Methods("GET")
 	app.Router.HandleFunc("/product", app.createProduct).Methods("POST")
+	app.Router.HandleFunc("/product/{id}", app.updateProduct).Methods("PUT")
 }
