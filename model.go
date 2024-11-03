@@ -31,7 +31,6 @@ func getProducts(db *sql.DB) ([]product, error) {
 		products = append(products, p)
 
 	}
-
 	return products, nil
 }
 
