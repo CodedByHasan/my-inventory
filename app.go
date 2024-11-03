@@ -77,9 +77,22 @@ func (app *App) getProduct(w http.ResponseWriter, r *http.Request) {
 	sendResponse(w, http.StatusOK, p)
 }
 
-func (app *App) handleRoutes() {
-	app.Router.HandleFunc("/products", app.getProducts).Methods("GET")
-	app.Router.HandleFunc("/product/{id}", app.getProduct).Methods("GET")
+func (app *App) createProduct(w http.ResponseWriter, r *http.Request) {
+	var p product
+	err := json.NewDecoder(r.Body).Decode(&p)
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, "Invalid request payload")
+		return
+	}
+
+	err = p.createProduct(app.DB)
+
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+	sendResponse(w, http.StatusOK, p)
 }
 
 func sendResponse(w http.ResponseWriter, statusCode int, payload interface{}) {
@@ -92,4 +105,10 @@ func sendResponse(w http.ResponseWriter, statusCode int, payload interface{}) {
 func sendError(w http.ResponseWriter, statusCode int, err string) {
 	error_message := map[string]string{"error": err}
 	sendResponse(w, statusCode, error_message)
+}
+
+func (app *App) handleRoutes() {
+	app.Router.HandleFunc("/products", app.getProducts).Methods("GET")
+	app.Router.HandleFunc("/product/{id}", app.getProduct).Methods("GET")
+	app.Router.HandleFunc("/product", app.createProduct).Methods("POST")
 }
