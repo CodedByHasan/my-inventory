@@ -16,16 +16,8 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (app *App) Initialise() error {
-	loadEnvVar("DB_USER")
-	loadEnvVar("DB_PASSWORD")
-	loadEnvVar("DB")
-
-	db_user := loadEnvVar("DB_USER")
-	db_password := loadEnvVar("DB_PASSWORD")
-	db := loadEnvVar("DB")
-
-	connectionString := fmt.Sprintf("%v:%v@tcp(localhost:3306)/%v", db_user, db_password, db)
+func (app *App) Initialise(DbUser string, DbPassword string, Db string) error {
+	connectionString := fmt.Sprintf("%v:%v@tcp(localhost:3306)/%v", DbUser, DbPassword, Db)
 	var err error
 
 	app.DB, err = sql.Open("mysql", connectionString)
