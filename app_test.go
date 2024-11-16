@@ -44,7 +44,6 @@ func clearTable() {
 	a.DB.Exec("DELETE from products")
 	// Every time table is cleared, begin auto increment at 1
 	a.DB.Exec("ALTER table products AUTO_INCREMENT=1")
-	log.Println("clearTable")
 }
 
 func addProduct(name string, quantity int, price float64) {
@@ -83,6 +82,23 @@ func TestCreateProduct(t *testing.T) {
 	if m["quantity"] != 1.0 {
 		t.Errorf("Expected quantity: %v, Got: %v", 1.0, m["quantity"])
 	}
+}
+
+func TestDeleteProduct(t *testing.T) {
+	clearTable()
+	addProduct("test product", 10, 10)
+
+	request, _ := http.NewRequest("GET", "/product/1", nil)
+	response := sendRequest(request)
+	checkStatusCode(t, http.StatusOK, response.Code)
+
+	request, _ = http.NewRequest("DELETE", "/product/1", nil)
+	response = sendRequest(request)
+	checkStatusCode(t, http.StatusOK, response.Code)
+
+	request, _ = http.NewRequest("GET", "/product/1", nil)
+	response = sendRequest(request)
+	checkStatusCode(t, http.StatusNotFound, response.Code)
 }
 
 func checkStatusCode(t *testing.T, expectedStatusCode int, actualStatusCode int) {
