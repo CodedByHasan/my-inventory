@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 )
 
@@ -37,15 +39,36 @@ func createTable() {
 }
 
 func clearTable() {
-	a.DB.Exec("DELETE FROM PRODUCTS")
+	a.DB.Exec("DELETE from products")
+	// Every time table is cleared, begin auto increment at 1
+	a.DB.Exec("ALTER table products AUTO_INCREMENT=1")
+	log.Println("clearTable")
 }
 
 func addProduct(name string, quantity int, price float64) {
-	query := fmt.Sprintf("INSERT into products(name, quantity, price) VALUES('%v, %v, %v')", name, quantity, price)
-	a.DB.Exec(query)
+	query := fmt.Sprintf("INSERT into products(name, quantity, price) VALUES('%v', %v, %v)", name, quantity, price)
+	_, err := a.DB.Exec(query)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func TestGetProduct(t *testing.T) {
 	clearTable()
 	addProduct("keyboard", 100, 125)
+	request, _ := http.NewRequest("GET", "/product/1", nil)
+	response := sendRequest(request)
+	checkStatusCode(t, http.StatusOK, response.Code)
+}
+
+func checkStatusCode(t *testing.T, expectedStatusCode int, actualStatusCode int) {
+	if expectedStatusCode != actualStatusCode {
+		t.Errorf("Expected status: %v, Received: %v", expectedStatusCode, actualStatusCode)
+	}
+}
+
+func sendRequest(request *http.Request) *httptest.ResponseRecorder {
+	recorder := httptest.NewRecorder()
+	a.Router.ServeHTTP(recorder, request)
+	return recorder
 }
