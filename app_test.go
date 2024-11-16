@@ -54,6 +54,18 @@ func addProduct(name string, quantity int, price float64) {
 	}
 }
 
+func checkStatusCode(t *testing.T, expectedStatusCode int, actualStatusCode int) {
+	if expectedStatusCode != actualStatusCode {
+		t.Errorf("Expected status: %v, Received: %v", expectedStatusCode, actualStatusCode)
+	}
+}
+
+func sendRequest(request *http.Request) *httptest.ResponseRecorder {
+	recorder := httptest.NewRecorder()
+	a.Router.ServeHTTP(recorder, request)
+	return recorder
+}
+
 func TestGetProduct(t *testing.T) {
 	clearTable()
 	addProduct("keyboard", 100, 125)
@@ -65,7 +77,6 @@ func TestGetProduct(t *testing.T) {
 func TestCreateProduct(t *testing.T) {
 	clearTable()
 	var product = []byte(`{"name":"chair", "quantity":1, "price":100}`)
-
 	request, _ := http.NewRequest("POST", "/product", bytes.NewBuffer(product))
 	request.Header.Set("Content-Type", "application/json")
 
@@ -101,14 +112,39 @@ func TestDeleteProduct(t *testing.T) {
 	checkStatusCode(t, http.StatusNotFound, response.Code)
 }
 
-func checkStatusCode(t *testing.T, expectedStatusCode int, actualStatusCode int) {
-	if expectedStatusCode != actualStatusCode {
-		t.Errorf("Expected status: %v, Received: %v", expectedStatusCode, actualStatusCode)
-	}
-}
+func TestUpdateProduct(t *testing.T) {
+	clearTable()
+	addProduct("test product", 10, 10)
 
-func sendRequest(request *http.Request) *httptest.ResponseRecorder {
-	recorder := httptest.NewRecorder()
-	a.Router.ServeHTTP(recorder, request)
-	return recorder
+	request, _ := http.NewRequest("GET", "/product/1", nil)
+	response := sendRequest(request)
+	checkStatusCode(t, http.StatusOK, response.Code)
+
+	var oldValue map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &oldValue)
+
+	// changing quantity from 10 -> 1 and price from 10 -> 15
+	var product = []byte(`{"name":"test product", "quantity":1, "price":15}`)
+	request, _ = http.NewRequest("PUT", "/product/1", bytes.NewBuffer(product))
+	request.Header.Set("Content-Type", "application/json")
+
+	response = sendRequest(request)
+	var newValue map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &newValue)
+
+	if oldValue["id"] != newValue["id"] {
+		t.Errorf("Expected id: %v, Got: %v", newValue["id"], oldValue["id"])
+	}
+
+	if oldValue["name"] != newValue["name"] {
+		t.Errorf("Expected id: %v, Got: %v", newValue["name"], oldValue["name"])
+	}
+
+	if oldValue["quantity"] == newValue["quantity"] {
+		t.Errorf("Expected id: %v, Got: %v", newValue["quantity"], oldValue["quantity"])
+	}
+
+	if oldValue["price"] == newValue["price"] {
+		t.Errorf("Expected id: %v, Got: %v", newValue["price"], oldValue["price"])
+	}
 }
