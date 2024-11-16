@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -59,6 +61,28 @@ func TestGetProduct(t *testing.T) {
 	request, _ := http.NewRequest("GET", "/product/1", nil)
 	response := sendRequest(request)
 	checkStatusCode(t, http.StatusOK, response.Code)
+}
+
+func TestCreateProduct(t *testing.T) {
+	clearTable()
+	var product = []byte(`{"name":"chair", "quantity":1, "price":100}`)
+
+	request, _ := http.NewRequest("POST", "/product", bytes.NewBuffer(product))
+	request.Header.Set("Content-Type", "application/json")
+
+	response := sendRequest(request)
+	checkStatusCode(t, http.StatusCreated, response.Code)
+
+	var m map[string]interface{}
+	json.Unmarshal(response.Body.Bytes(), &m)
+
+	if m["name"] != "chair" {
+		t.Errorf("Expected name: %v, Got: %v", "chair", m["name"])
+	}
+
+	if m["quantity"] != 1.0 {
+		t.Errorf("Expected quantity: %v, Got: %v", 1.0, m["quantity"])
+	}
 }
 
 func checkStatusCode(t *testing.T, expectedStatusCode int, actualStatusCode int) {
