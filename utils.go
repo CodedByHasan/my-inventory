@@ -7,9 +7,9 @@ import (
 )
 
 func loadEnvVar(varName string) string {
-	err_reading_from_env := godotenv.Load()
+	errReadingFromEnv := godotenv.Load()
 
-	if err_reading_from_env != nil {
+	if errReadingFromEnv != nil {
 		log.Fatalln("Error loading .env file")
 	}
 

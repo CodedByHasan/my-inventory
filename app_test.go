@@ -13,10 +13,10 @@ import (
 var a App
 
 func TestMain(m *testing.M) {
-	db_user := loadEnvVar("DB_USER")
-	db_password := loadEnvVar("DB_PASSWORD")
+	dbUser := loadEnvVar("DB_USER")
+	dbPassword := loadEnvVar("DB_PASSWORD")
 
-	err := a.Initialise(db_user, db_password, "test")
+	err := a.Initialise(dbUser, dbPassword, "test")
 	if err != nil {
 		log.Fatal("Error occured while initialising the database")
 	}

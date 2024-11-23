@@ -20,7 +20,7 @@ func getProducts(db *sql.DB) ([]product, error) {
 		return nil, err
 	}
 
-	products := []product{}
+	var products []product
 	for rows.Next() {
 		var p product
 		err := rows.Scan(&p.ID, &p.Name, &p.Quantity, &p.Price)

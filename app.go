@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -57,8 +58,8 @@ func (app *App) getProduct(w http.ResponseWriter, r *http.Request) {
 
 	err = p.getProduct(app.DB)
 	if err != nil {
-		switch err {
-		case sql.ErrNoRows:
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
 			sendError(w, http.StatusNotFound, "Product not found")
 		default:
 			sendError(w, http.StatusInternalServerError, err.Error())
@@ -134,8 +135,8 @@ func sendResponse(w http.ResponseWriter, statusCode int, payload interface{}) {
 }
 
 func sendError(w http.ResponseWriter, statusCode int, err string) {
-	error_message := map[string]string{"error": err}
-	sendResponse(w, statusCode, error_message)
+	errorMessage := map[string]string{"error": err}
+	sendResponse(w, statusCode, errorMessage)
 }
 
 func (app *App) handleRoutes() {
