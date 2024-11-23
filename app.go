@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
@@ -16,16 +17,8 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (app *App) Initialise() error {
-	loadEnvVar("DB_USER")
-	loadEnvVar("DB_PASSWORD")
-	loadEnvVar("DB")
-
-	db_user := loadEnvVar("DB_USER")
-	db_password := loadEnvVar("DB_PASSWORD")
-	db := loadEnvVar("DB")
-
-	connectionString := fmt.Sprintf("%v:%v@tcp(localhost:3306)/%v", db_user, db_password, db)
+func (app *App) Initialise(DbUser string, DbPassword string, Db string) error {
+	connectionString := fmt.Sprintf("%v:%v@tcp(localhost:3306)/%v", DbUser, DbPassword, Db)
 	var err error
 
 	app.DB, err = sql.Open("mysql", connectionString)
@@ -65,8 +58,8 @@ func (app *App) getProduct(w http.ResponseWriter, r *http.Request) {
 
 	err = p.getProduct(app.DB)
 	if err != nil {
-		switch err {
-		case sql.ErrNoRows:
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
 			sendError(w, http.StatusNotFound, "Product not found")
 		default:
 			sendError(w, http.StatusInternalServerError, err.Error())
@@ -90,7 +83,7 @@ func (app *App) createProduct(w http.ResponseWriter, r *http.Request) {
 		sendError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	sendResponse(w, http.StatusOK, p)
+	sendResponse(w, http.StatusCreated, p)
 }
 
 func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
@@ -142,8 +135,8 @@ func sendResponse(w http.ResponseWriter, statusCode int, payload interface{}) {
 }
 
 func sendError(w http.ResponseWriter, statusCode int, err string) {
-	error_message := map[string]string{"error": err}
-	sendResponse(w, statusCode, error_message)
+	errorMessage := map[string]string{"error": err}
+	sendResponse(w, statusCode, errorMessage)
 }
 
 func (app *App) handleRoutes() {
