@@ -1,6 +1,6 @@
 # My Inventory
 
-![Github Workflow](https://github.com/CodedByHasan/my-inventory/actions/workflows/main.yml/badge.svg)
+![Github Workflow](https://github.com/codedByHasan/my-inventory/actions/workflows/main.yml/badge.svg)
 
 ## Getting started
 
@@ -31,7 +31,7 @@ go run /path/to/binary
 
 ## Endpoints
 
-The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go).
+The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go#L142).
 The API endpoints are follows:
 
 | HTTP Verb | Endpoint      | Description                                                                      |
