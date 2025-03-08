@@ -1,6 +1,6 @@
 # My Inventory
 
-![Github Workflow](https://github.com/codedByHasan/my-inventory/actions/workflows/main.yml/badge.svg)
+![Github Workflow](https://github.com/codedByHasan/my-inventory/actions/workflows/ci.yml/badge.svg)
 
 ## Getting started
 
