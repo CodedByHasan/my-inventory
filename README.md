@@ -4,18 +4,19 @@
 
 ## Getting started
 
-Copy the `example.env` file to `.env` and update variables:
+Copy the [`example.env`](example.env) file to `.env` and update variables:
 
 ```bash
 cp example.env .env
 ```
 
-| Variable      | Description                               |
-| ------------- | ----------------------------------------- |
-| `DB_USER`     | Username used to access mysql database    |
-| `DB_PASSWORD` | Password used to access mysql database    |
-| `DB`          | Name of the database e.g., `my-inventory` |
-| `APP_PORT`    | Port that the server will use.            |
+| Variable      | Description                                |
+| ------------- | ------------------------------------------ |
+| `DB_USER`     | Username used to access mysql database.    |
+| `DB_PASSWORD` | Password used to access mysql database.    |
+| `DB_NAME `    | Name of the database e.g., `my-inventory`. |
+| `DB_PORT`     | TCP port that database is running on.      |
+| `APP_PORT`    | Port that the server will use.             |
 
 You will need to install mysql on your host machine before running server.
 
@@ -27,6 +28,14 @@ To run the server:
 go install # install dependencies
 go build # build binary
 go run /path/to/binary
+```
+
+## Running the Database
+
+To run the database:
+
+```bash
+docker compose up
 ```
 
 ## Endpoints
