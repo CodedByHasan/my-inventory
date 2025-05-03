@@ -15,8 +15,10 @@ var a App
 func TestMain(m *testing.M) {
 	dbUser := loadEnvVar("DB_USER")
 	dbPassword := loadEnvVar("DB_PASSWORD")
+	dbPort := "3306" // default MYSQL port
+	db :=  "test"
 
-	err := a.Initialise(dbUser, dbPassword, "test")
+	err := a.Initialise(dbUser, dbPassword, dbPort, db)
 	if err != nil {
 		log.Fatal("Error occured while initialising the database")
 	}
