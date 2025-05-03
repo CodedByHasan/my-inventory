@@ -20,7 +20,7 @@ func TestMain(m *testing.M) {
 
 	err := a.Initialise(dbUser, dbPassword, dbPort, db)
 	if err != nil {
-		log.Fatal("Error occured while initialising the database")
+		log.Fatal("Error occurred while initialising the database")
 	}
 
 	createTable()
