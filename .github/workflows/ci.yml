@@ -32,6 +32,8 @@ jobs:
           # Create .env var first
           touch .env
 
+          pwd
+
           # Get path of env var
           export ENVPATH=".env" 
 
@@ -39,4 +41,4 @@ jobs:
           echo "DB_NAME=${{env.DB_NAME}}" >> .env
           echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> .env
 
-          go test
+          go test ./...
