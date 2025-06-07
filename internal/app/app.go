@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"database/sql"
@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"my-inventory/internal/model"
 )
 
 type App struct {
@@ -36,7 +37,7 @@ func (app *App) Run(address string) {
 }
 
 func (app *App) getProducts(w http.ResponseWriter, r *http.Request) {
-	products, err := getProducts(app.DB)
+	products, err := model.GetProducts(app.DB)
 
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err.Error())
@@ -54,9 +55,9 @@ func (app *App) getProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := product{ID: key}
+	p := model.Product{ID: key}
 
-	err = p.getProduct(app.DB)
+	err = p.GetProduct(app.DB)
 	if err != nil {
 		switch {
 		case errors.Is(err, sql.ErrNoRows):
@@ -70,7 +71,7 @@ func (app *App) getProduct(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) createProduct(w http.ResponseWriter, r *http.Request) {
-	var p product
+	var p model.Product
 
 	err := json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
@@ -78,7 +79,7 @@ func (app *App) createProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = p.createProduct(app.DB)
+	err = p.CreateProduct(app.DB)
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -94,7 +95,7 @@ func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var p product
+	var p model.Product
 	err = json.NewDecoder(r.Body).Decode(&p)
 	if err != nil {
 		sendError(w, http.StatusBadRequest, "Invalid request payload")
@@ -102,7 +103,7 @@ func (app *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	p.ID = key
-	err = p.updateProduct(app.DB)
+	err = p.UpdateProduct(app.DB)
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err.Error())
 		return
@@ -118,8 +119,8 @@ func (app *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	p := product{ID: key}
-	err = p.deleteProduct(app.DB)
+	p := model.Product{ID: key}
+	err = p.DeleteProduct(app.DB)
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, err.Error())
 		return

@@ -1,4 +1,4 @@
-package main
+package app
 
 import (
 	"bytes"
@@ -6,15 +6,17 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"net/http/httptest"
 	"testing"
+
+	"net/http/httptest"
+	"my-inventory/utils"
 )
 
 var a App
 
 func TestMain(m *testing.M) {
-	dbUser := loadEnvVar("DB_USER")
-	dbPassword := loadEnvVar("DB_PASSWORD")
+	dbUser := utils.LoadEnvVar("DB_USER")
+	dbPassword := utils.LoadEnvVar("DB_PASSWORD")
 	dbPort := "3306" // default MYSQL port
 	db :=  "test"
 
