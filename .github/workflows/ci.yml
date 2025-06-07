@@ -32,11 +32,7 @@ jobs:
           # Create .env var first
           touch .env
 
-          pwd
-
-          # Get path of env var
           export ENVPATH="${{github.workspace}}/.env"
-          echo $ENVPATH 
 
           echo "DB_USER=${{env.DB_USER}}" >> .env
           echo "DB_NAME=${{env.DB_NAME}}" >> .env
