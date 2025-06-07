@@ -35,7 +35,7 @@ jobs:
           pwd
 
           # Get path of env var
-          export ENVPATH="${{GITHUB_WORKSPACE}}/.env"
+          export ENVPATH="${{github.workspace}}/.env"
           echo $ENVPATH 
 
           echo "DB_USER=${{env.DB_USER}}" >> .env
