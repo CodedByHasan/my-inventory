@@ -18,16 +18,10 @@ cp example.env .env
 | `DB_PORT`     | TCP port that database is running on.      |
 | `APP_PORT`    | Port that the server will use.             |
 
-You will need to install mysql on your host machine before running server.
-
-## Running the server
-
-To run the server:
+Export `ENVPATH` and set it to absolute path of `.env` file.
 
 ```bash
-go install # install dependencies
-go build # build binary
-go run /path/to/binary
+export ENVPATH=/path/to/env/file
 ```
 
 ## Running the Database
@@ -36,6 +30,16 @@ To run the database:
 
 ```bash
 docker compose up
+```
+
+## Running the server
+
+To run the server:
+
+```bash
+go install # install dependencies
+go build -o my-inventory cmd/api-server/main.go # build binary
+go run /path/to/binary
 ```
 
 ## Endpoints
