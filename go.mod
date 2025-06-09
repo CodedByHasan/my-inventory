@@ -1,4 +1,4 @@
-module example.com/my-inventory
+module my-inventory
 
 go 1.23.2
 

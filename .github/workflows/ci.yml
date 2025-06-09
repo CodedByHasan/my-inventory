@@ -31,7 +31,11 @@ jobs:
         run: |
           # Create .env var first
           touch .env
+
+          export ENVPATH="${{github.workspace}}/.env"
+
           echo "DB_USER=${{env.DB_USER}}" >> .env
           echo "DB_NAME=${{env.DB_NAME}}" >> .env
           echo "DB_PASSWORD=${{secrets.DB_PASSWORD}}" >> .env
-          go test
+
+          go test ./...
