@@ -141,9 +141,9 @@ func sendError(w http.ResponseWriter, statusCode int, err string) {
 }
 
 func (app *App) handleRoutes() {
-	app.Router.HandleFunc("/products", app.getProducts).Methods("GET")
-	app.Router.HandleFunc("/product/{id}", app.getProduct).Methods("GET")
-	app.Router.HandleFunc("/product", app.createProduct).Methods("POST")
-	app.Router.HandleFunc("/product/{id}", app.updateProduct).Methods("PUT")
-	app.Router.HandleFunc("/product/{id}", app.deleteProduct).Methods("DELETE")
+	app.Router.HandleFunc("/api/products", app.getProducts).Methods("GET")
+	app.Router.HandleFunc("/api/product/{id}", app.getProduct).Methods("GET")
+	app.Router.HandleFunc("/api/product", app.createProduct).Methods("POST")
+	app.Router.HandleFunc("/api/product/{id}", app.updateProduct).Methods("PUT")
+	app.Router.HandleFunc("/api/product/{id}", app.deleteProduct).Methods("DELETE")
 }
