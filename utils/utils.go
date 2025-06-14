@@ -3,37 +3,47 @@ package utils
 import (
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/joho/godotenv"
 )
 
-func PathToEnvFile() string {
-	value, exists := os.LookupEnv("ENVPATH")
-
-	if exists && value != "" {
-		log.Printf("Found ENVPATH variable")
-		return value
-	} else {
-		log.Fatalf("ENVPATH not set. Please set absolute path to .env file")
-		return ""
+// walk up directory tree until .env is found
+func findDotEnv() string {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatalln("Failed to get current working directory:", err)
 	}
+
+	for {
+		envPath := filepath.Join(dir, ".env")
+		if _, err := os.Stat(envPath); err == nil {
+			log.Printf("Found .env file at %s", envPath)
+			return envPath
+		}
+
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break // reached root
+		}
+		dir = parent
+	}
+
+	log.Fatalln(".env file not found in any parent directory")
+	return ""
 }
 
 func LoadEnvVar(varName string) string {
-	envFilePath := PathToEnvFile()
+	envFilePath := findDotEnv()
 
-	errReadingFromEnv := godotenv.Load(envFilePath)
-
-	if errReadingFromEnv != nil {
-		log.Fatalln("Error loading .env file")
+	err := godotenv.Load(envFilePath)
+	if err != nil {
+		log.Fatalln("Error loading .env file:", err)
 	}
 
-	envVar, doesExists := os.LookupEnv(varName)
-
-	if !doesExists {
-		log.Fatalf("%s does not exists. Please ensure it is set in .env file", varName)
+	val, exists := os.LookupEnv(varName)
+	if !exists {
+		log.Fatalf("%s not set in .env file", varName)
 	}
-
-	return envVar
+	return val
 }
-
