@@ -10,19 +10,14 @@ Copy the [`example.env`](example.env) file to `.env` and update variables:
 cp example.env .env
 ```
 
-| Variable      | Description                                |
-| ------------- | ------------------------------------------ |
-| `DB_USER`     | Username used to access mysql database.    |
-| `DB_PASSWORD` | Password used to access mysql database.    |
-| `DB_NAME `    | Name of the database e.g., `my-inventory`. |
-| `DB_PORT`     | TCP port that database is running on.      |
-| `APP_PORT`    | Port that the server will use.             |
-
-Export `ENVPATH` and set it to absolute path of `.env` file.
-
-```bash
-export ENVPATH=/path/to/env/file
-```
+| Variable        | Description                                                                            |
+| --------------- | -------------------------------------------------------------------------------------- |
+| `DB_USER`       | Username used to access mysql database.                                                |
+| `DB_PASSWORD`   | Password used to access mysql database.                                                |
+| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                             |
+| `DB_PORT`       | TCP port that database is running on.                                                  |
+| `APP_PORT`      | Port that the server will use.                                                         |
+| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend. |
 
 ## Running the Database
 
@@ -40,6 +35,12 @@ To run the server:
 go install # install dependencies
 go build -o my-inventory cmd/api-server/main.go # build binary
 go run /path/to/binary
+```
+
+## Running Frontend
+
+```bash
+npm --prefix frontend run dev
 ```
 
 ## Endpoints
