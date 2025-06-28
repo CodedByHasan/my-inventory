@@ -73,7 +73,7 @@ func sendRequest(request *http.Request) *httptest.ResponseRecorder {
 func TestGetProduct(t *testing.T) {
 	clearTable()
 	addProduct("keyboard", 100, 125)
-	request, _ := http.NewRequest("GET", "/product/1", nil)
+	request, _ := http.NewRequest("GET", "/api/product/1", nil)
 	response := sendRequest(request)
 	checkStatusCode(t, http.StatusOK, response.Code)
 }
@@ -81,7 +81,7 @@ func TestGetProduct(t *testing.T) {
 func TestCreateProduct(t *testing.T) {
 	clearTable()
 	var product = []byte(`{"name":"chair", "quantity":1, "price":100}`)
-	request, _ := http.NewRequest("POST", "/product", bytes.NewBuffer(product))
+	request, _ := http.NewRequest("POST", "/api/product", bytes.NewBuffer(product))
 	request.Header.Set("Content-Type", "application/json")
 
 	response := sendRequest(request)
@@ -103,15 +103,15 @@ func TestDeleteProduct(t *testing.T) {
 	clearTable()
 	addProduct("test product", 10, 10)
 
-	request, _ := http.NewRequest("GET", "/product/1", nil)
+	request, _ := http.NewRequest("GET", "/api/product/1", nil)
 	response := sendRequest(request)
 	checkStatusCode(t, http.StatusOK, response.Code)
 
-	request, _ = http.NewRequest("DELETE", "/product/1", nil)
+	request, _ = http.NewRequest("DELETE", "/api/product/1", nil)
 	response = sendRequest(request)
 	checkStatusCode(t, http.StatusOK, response.Code)
 
-	request, _ = http.NewRequest("GET", "/product/1", nil)
+	request, _ = http.NewRequest("GET", "/api/product/1", nil)
 	response = sendRequest(request)
 	checkStatusCode(t, http.StatusNotFound, response.Code)
 }
@@ -120,7 +120,7 @@ func TestUpdateProduct(t *testing.T) {
 	clearTable()
 	addProduct("test product", 10, 10)
 
-	request, _ := http.NewRequest("GET", "/product/1", nil)
+	request, _ := http.NewRequest("GET", "/api/product/1", nil)
 	response := sendRequest(request)
 	checkStatusCode(t, http.StatusOK, response.Code)
 
@@ -129,8 +129,8 @@ func TestUpdateProduct(t *testing.T) {
 
 	// changing quantity from 10 -> 1 and price from 10 -> 15
 	var product = []byte(`{"name":"test product", "quantity":1, "price":15}`)
-	request, _ = http.NewRequest("PUT", "/product/1", bytes.NewBuffer(product))
-	request.Header.Set("Content-Type", "application/json")
+	request, _ = http.NewRequest("PUT", "/api/product/1", bytes.NewBuffer(product))
+	request.Header.Set("Content-Type", "/api/application/json")
 
 	response = sendRequest(request)
 	var newValue map[string]interface{}
