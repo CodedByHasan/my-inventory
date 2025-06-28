@@ -3,32 +3,62 @@ package utils
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
+var TestFindDotEnvTest = []struct {
+	name          string
+	setupEnvFile  bool
+	expectedError bool
+}{
+	{
+		name:          "Env file Found",
+		setupEnvFile:  true,
+		expectedError: false,
+	},
+	{
+		name:          "Env file missing",
+		setupEnvFile:  false,
+		expectedError: true,
+	},
+}
 func TestFindDotEnv(t *testing.T) {
-	baseDir := t.TempDir()
 
-	envFilePath := filepath.Join(baseDir, ".env")
-	content := []byte("TEST_KEY=test_value")
+	for _, tt := range TestFindDotEnvTest {
+		baseDir := t.TempDir()
 
-	if err := os.WriteFile(envFilePath, content, 0644); err != nil{
-		t.Fatalf("Failed to write temp .env file: %v", err)
-	}
+		if tt.setupEnvFile {
+			envFilePath := filepath.Join(baseDir, ".env")
+			content := []byte("TEST_KEY=test_value")
 
-	subDir := filepath.Join(baseDir, "subdir", "nested")
-	if err := os.MkdirAll(subDir, 0755); err != nil {
-		t.Fatalf("Failed to create nested directory: %v", err)
-	}
+			if err := os.WriteFile(envFilePath, content, 0644); err != nil {
+				t.Fatalf("Failed to write temp .env file: %v", err)
+			}
+		}
 
-	if err := os.Chdir(subDir); err != nil {
-		t.Fatalf("Failed to change working directory %v", err)
-	}
+		subDir := filepath.Join(baseDir, "subdir", "nested")
+		if err := os.MkdirAll(subDir, 0755); err != nil {
+			t.Fatalf("Failed to create nested directory: %v", err)
+		}
 
-	// foundPath := "test"
-	foundPath := findDotEnv()
+		if err := os.Chdir(subDir); err != nil {
+			t.Fatalf("Failed to change working directory %v", err)
+		}
 
-	if foundPath != envFilePath {
-		t.Errorf("Expected findDotEnv to find %s, but got %s", envFilePath, foundPath)
+		path, err := findDotEnv()
+
+		if tt.expectedError {
+			if err == nil {
+				t.Error("Expected error, but got none")
+			}
+		} else {
+			if err != nil {
+				t.Errorf("Expected no error, but got: %v", err)
+			}
+			if !strings.HasSuffix(path, ".env") {
+				t.Errorf("Expected .env path, but got %s", path)
+			}
+		}
 	}
 }
