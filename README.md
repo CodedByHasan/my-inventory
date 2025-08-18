@@ -10,13 +10,13 @@ Copy the [`example.env`](example.env) file to `.env` and update variables:
 cp example.env .env
 ```
 
-| Variable        | Description                                                                            |
-| --------------- | -------------------------------------------------------------------------------------- |
-| `DB_USER`       | Username used to access mysql database.                                                |
-| `DB_PASSWORD`   | Password used to access mysql database.                                                |
-| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                             |
-| `DB_PORT`       | TCP port that database is running on.                                                  |
-| `APP_PORT`      | Port that the server will use.                                                         |
+| Variable        | Description                                                                             |
+| --------------- | --------------------------------------------------------------------------------------- |
+| `DB_USER`       | Username used to access mysql database.                                                 |
+| `DB_PASSWORD`   | Password used to access mysql database.                                                 |
+| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                              |
+| `DB_PORT`       | TCP port that database is running on.                                                   |
+| `APP_PORT`      | Port that the server will use.                                                          |
 | `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend. |
 
 ## Running the Database
@@ -45,10 +45,10 @@ npm --prefix frontend run dev
 
 ## Endpoints
 
-The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go#L142).
+The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go#L1+42).
 The API endpoints are follows:
 
-| HTTP Verb | Endpoint      | Description                                                                      |
+| HTTP Verb | Endpoint      | Description                            +                                          |
 | --------- | ------------- | -------------------------------------------------------------------------------- |
 | GET       | `/products`   | Get a list of all products.                                                      |
 | GET       | `/product/id` | Get information about the respective product.                                    |
