@@ -8,14 +8,8 @@ import (
 
 func main() {
 	app := app.App{}
+	cfg := utils.LoadEnvConfig()
 
-	// initialising env vars
-	dbUser := utils.LoadEnvVar("DB_USER")
-	dbPassword := utils.LoadEnvVar("DB_PASSWORD")
-	dbName := utils.LoadEnvVar("DB_NAME")
-	appPort := utils.LoadEnvVar("APP_PORT")
-	dbPort := utils.LoadEnvVar("DB_PORT")
-
-	app.Initialise(dbUser, dbPassword, dbPort, dbName)
-	app.Run(fmt.Sprintf("localhost:%s", appPort))
+	app.Initialise(cfg.DBUser, cfg.DBPassword, cfg.DBPort, cfg.DBName)
+	app.Run(fmt.Sprintf("localhost:%s", cfg.AppPort))
 }
