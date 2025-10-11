@@ -48,13 +48,13 @@ npm --prefix frontend run dev
 The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go#L1+42).
 The API endpoints are follows:
 
-| HTTP Verb | Endpoint      | Description                            +                                          |
-| --------- | ------------- | -------------------------------------------------------------------------------- |
-| GET       | `/products`   | Get a list of all products.                                                      |
-| GET       | `/product/id` | Get information about the respective product.                                    |
-| POST      | `/product`    | Create new product based on given information from user and save it to database. |
-| PUT       | `/product/id` | Update the respective product with given information from user.                  |
-| DELETE    | `/product/id` | Delete the respective product.                                                   |
+| HTTP Verb | Endpoint          | Description +                                                                    |
+| --------- | ----------------- | -------------------------------------------------------------------------------- |
+| GET       | `/api/products`   | Get a list of all products.                                                      |
+| GET       | `/api/product/id` | Get information about the respective product.                                    |
+| POST      | `/api/product`    | Create new product based on given information from user and save it to database. |
+| PUT       | `/api/product/id` | Update the respective product with given information from user.                  |
+| DELETE    | `/api/product/id` | Delete the respective product.                                                   |
 
 ## Acknowledgements
 

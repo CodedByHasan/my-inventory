@@ -7,13 +7,28 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
-    ports:
-      - ${DB_PORT}:3306
+    # ports:
+    #   - ${DB_PORT}:3306
     volumes:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql # database initialisation for new instance
       - my-inventory-data:/var/lib/mysql
     env_file:
+      - .env  
+  my-inventory:
+    depends_on:
+      - mysql
+    build:
+      context: .
+      args:
+        APP_PORT: ${APP_PORT}
+    ports:
+     - ${APP_PORT}:${APP_PORT}
+    env_file:
       - .env
+    volumes:
+      - type: bind
+        source: .env
+        target: /.env
 
 volumes:
   my-inventory-data:

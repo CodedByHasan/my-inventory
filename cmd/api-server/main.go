@@ -11,5 +11,5 @@ func main() {
 	cfg := utils.LoadEnvConfig()
 
 	app.Initialise(cfg.DBUser, cfg.DBPassword, cfg.DBPort, cfg.DBName)
-	app.Run(fmt.Sprintf("localhost:%s", cfg.AppPort))
+	app.Run(fmt.Sprintf(":%s", cfg.AppPort))
 }
