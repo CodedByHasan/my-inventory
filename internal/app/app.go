@@ -21,15 +21,11 @@ type App struct {
 	DB     *sql.DB
 }
 
-func checkDatabaseConnection(database *sql.DB) {
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+func checkDatabaseConnection(database *sql.DB) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	status := "database is up"
-	if err := database.PingContext(ctx); err != nil {
-		status = "database is down"
-	}
-	log.Println(status)
+	return database.PingContext(ctx)
 }
 
 func (app *App) Initialise(DBConfig utils.EnvConfig) error {
@@ -50,7 +46,11 @@ func (app *App) Initialise(DBConfig utils.EnvConfig) error {
 		return err
 	}
 
-	checkDatabaseConnection(app.DB)
+	if err := checkDatabaseConnection(app.DB); err != nil {
+		log.Println("database is down")
+	} else {
+		log.Println("database is up")
+	}
 
 	app.Router = mux.NewRouter().StrictSlash(true)
 	app.handleRoutes()
