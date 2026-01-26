@@ -6,14 +6,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 	"log"
 	"my-inventory/internal/model"
+	"my-inventory/utils"
 	"net/http"
 	"strconv"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 )
 
 type App struct {
@@ -32,27 +32,18 @@ func checkDatabaseConnection(database *sql.DB) {
 	log.Println(status)
 }
 
-func (app *App) Initialise(DbUser string, DbPassword string, DbHost string, DbPort string, DbName string) error {
+func (app *App) Initialise(DBConfig utils.EnvConfig) error {
 	connectionString := fmt.Sprintf(
-		// connection string should be something like: user:password@tcp(host:port)/db-name
 		"%s:%s@tcp(%s:%s)/%s",
-		DbUser,
-		DbPassword,
-		DbHost,
-		DbPort,
-		DbName,
+		DBConfig.DBUser,
+		DBConfig.DBPassword,
+		DBConfig.DBHost,
+		DBConfig.DBPort,
+		DBConfig.DBName,
 	)
-
-	fmt.Println(connectionString)
 
 	var err error
 
-	// if DbHost == "localhost" {
-	// 	fmt.Println(connectionString)
-	// 	} else {
-	// 		fmt.Println(connectionString)
-	// 	}
-	// 	app.DB, err = sql.Open(fmt.Sprint("%s", connectionString), DbHost)
 	app.DB, err = sql.Open("mysql", connectionString)
 
 	if err != nil {
