@@ -5,22 +5,25 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
-	"net/http"
-	"testing"
-
-	"net/http/httptest"
 	"my-inventory/utils"
+	"net/http"
+	"net/http/httptest"
+	"testing"
 )
 
 var a App
 
 func TestMain(m *testing.M) {
-	dbUser := utils.LoadEnvVar("DB_USER")
-	dbPassword := utils.LoadEnvVar("DB_PASSWORD")
-	dbPort := "3306" // default MYSQL port
-	db :=  "test"
 
-	err := a.Initialise(dbUser, dbPassword, dbPort, db)
+	testEnvConfig := utils.EnvConfig{
+		DBUser:     utils.LoadEnvVar("DB_USER"),
+		DBPassword: utils.LoadEnvVar("DB_PASSWORD"),
+		DBHost:     "localhost",
+		DBPort:     "3306",
+		DBName:     "test",
+	}
+
+	err := a.Initialise(testEnvConfig)
 	if err != nil {
 		log.Fatal("Error occurred while initialising the database")
 	}

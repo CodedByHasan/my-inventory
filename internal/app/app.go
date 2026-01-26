@@ -1,6 +1,7 @@
 package app
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
@@ -8,9 +9,11 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"log"
+	"my-inventory/internal/model"
+	"my-inventory/utils"
 	"net/http"
 	"strconv"
-	"my-inventory/internal/model"
+	"time"
 )
 
 type App struct {
@@ -18,14 +21,37 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (app *App) Initialise(DbUser string, DbPassword string, DbPort string, DbName string) error {
-	connectionString := fmt.Sprintf("%s:%s@tcp(localhost:%s)/%s", DbUser, DbPassword, DbPort, DbName)
+func checkDatabaseConnection(database *sql.DB) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	return database.PingContext(ctx)
+}
+
+func (app *App) Initialise(DBConfig utils.EnvConfig) error {
+	connectionString := fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s",
+		DBConfig.DBUser,
+		DBConfig.DBPassword,
+		DBConfig.DBHost,
+		DBConfig.DBPort,
+		DBConfig.DBName,
+	)
+
 	var err error
 
 	app.DB, err = sql.Open("mysql", connectionString)
+
 	if err != nil {
 		return err
 	}
+
+	if err := checkDatabaseConnection(app.DB); err != nil {
+		log.Println("database is down")
+	} else {
+		log.Println("database is up")
+	}
+
 	app.Router = mux.NewRouter().StrictSlash(true)
 	app.handleRoutes()
 

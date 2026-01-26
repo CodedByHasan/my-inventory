@@ -23,6 +23,7 @@ var TestFindDotEnvTest = []struct {
 		expectedError: true,
 	},
 }
+
 func TestFindDotEnv(t *testing.T) {
 
 	for _, tt := range TestFindDotEnvTest {

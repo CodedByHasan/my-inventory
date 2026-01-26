@@ -10,31 +10,35 @@ Copy the [`example.env`](example.env) file to `.env` and update variables:
 cp example.env .env
 ```
 
-| Variable        | Description                                                                             |
-| --------------- | --------------------------------------------------------------------------------------- |
-| `DB_USER`       | Username used to access mysql database.                                                 |
-| `DB_PASSWORD`   | Password used to access mysql database.                                                 |
-| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                              |
-| `DB_PORT`       | TCP port that database is running on.                                                   |
-| `APP_PORT`      | Port that the server will use.                                                          |
-| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend. |
+| Variable        | Description                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `DB_USER`       | Username used to access mysql database.                                                                             |
+| `DB_PASSWORD`   | Password used to access mysql database.                                                                             |
+| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                                                          |
+| `DB_PORT`       | TCP port that database is running on.                                                                               |
+| `DB_HOST`       | The host to deploy my-inventory to. Use `localhost` for local deployments and `mysql` for docker compose deployment |
+| `APP_PORT`      | Port that the server will use.                                                                                      |
+| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend.                             |
 
-## Running the Database
+## Running Using Docker Compose
 
-To run the database:
+To deploy my-inventory using docker compose, simply run the following:
 
 ```bash
 docker compose up
+
+# To rebuild image
+docker compose up --build
 ```
 
-## Running the server
+## Running on Localhost
 
-To run the server:
+To run my-inventory on localhost:
 
 ```bash
 go install # install dependencies
 go build -o my-inventory cmd/api-server/main.go # build binary
-go run /path/to/binary
+./path/to/binary
 ```
 
 ## Running Frontend
@@ -45,16 +49,16 @@ npm --prefix frontend run dev
 
 ## Endpoints
 
-The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go#L1+42).
+The available endpoints are as specified in `handleRoutes()` in [`app.go`](/internal/app/app.go#L169).
 The API endpoints are follows:
 
-| HTTP Verb | Endpoint      | Description                            +                                          |
-| --------- | ------------- | -------------------------------------------------------------------------------- |
-| GET       | `/products`   | Get a list of all products.                                                      |
-| GET       | `/product/id` | Get information about the respective product.                                    |
-| POST      | `/product`    | Create new product based on given information from user and save it to database. |
-| PUT       | `/product/id` | Update the respective product with given information from user.                  |
-| DELETE    | `/product/id` | Delete the respective product.                                                   |
+| HTTP Verb | Endpoint          | Description +                                                                    |
+| --------- | ----------------- | -------------------------------------------------------------------------------- |
+| GET       | `/api/products`   | Get a list of all products.                                                      |
+| GET       | `/api/product/id` | Get information about the respective product.                                    |
+| POST      | `/api/product`    | Create new product based on given information from user and save it to database. |
+| PUT       | `/api/product/id` | Update the respective product with given information from user.                  |
+| DELETE    | `/api/product/id` | Delete the respective product.                                                   |
 
 ## Acknowledgements
 
