@@ -10,14 +10,15 @@ Copy the [`example.env`](example.env) file to `.env` and update variables:
 cp example.env .env
 ```
 
-| Variable        | Description                                                                             |
-| --------------- | --------------------------------------------------------------------------------------- |
-| `DB_USER`       | Username used to access mysql database.                                                 |
-| `DB_PASSWORD`   | Password used to access mysql database.                                                 |
-| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                              |
-| `DB_PORT`       | TCP port that database is running on.                                                   |
-| `APP_PORT`      | Port that the server will use.                                                          |
-| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend. |
+| Variable        | Description                                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `DB_USER`       | Username used to access mysql database.                                                                            |
+| `DB_PASSWORD`   | Password used to access mysql database.                                                                            |
+| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                                                         |
+| `DB_PORT`       | TCP port that database is running on.                                                                              |
+| `DB_HOST`       | The host to deploy my-inventory to. Use `locahost` for local deployments and `mysql` for docker compose deployment |
+| `APP_PORT`      | Port that the server will use.                                                                                     |
+| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend.                            |
 
 ## Running the Database
 
@@ -45,7 +46,7 @@ npm --prefix frontend run dev
 
 ## Endpoints
 
-The available endpoints are as specified in `handleRoutes()` in [`app.go`](./app.go#L1+42).
+The available endpoints are as specified in `handleRoutes()` in [`app.go`](/internal/app/app.go#L169).
 The API endpoints are follows:
 
 | HTTP Verb | Endpoint          | Description +                                                                    |
