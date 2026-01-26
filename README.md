@@ -10,27 +10,30 @@ Copy the [`example.env`](example.env) file to `.env` and update variables:
 cp example.env .env
 ```
 
-| Variable        | Description                                                                                                        |
-| --------------- | ------------------------------------------------------------------------------------------------------------------ |
-| `DB_USER`       | Username used to access mysql database.                                                                            |
-| `DB_PASSWORD`   | Password used to access mysql database.                                                                            |
-| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                                                         |
-| `DB_PORT`       | TCP port that database is running on.                                                                              |
-| `DB_HOST`       | The host to deploy my-inventory to. Use `locahost` for local deployments and `mysql` for docker compose deployment |
-| `APP_PORT`      | Port that the server will use.                                                                                     |
-| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend.                            |
+| Variable        | Description                                                                                                         |
+| --------------- | ------------------------------------------------------------------------------------------------------------------- |
+| `DB_USER`       | Username used to access mysql database.                                                                             |
+| `DB_PASSWORD`   | Password used to access mysql database.                                                                             |
+| `DB_NAME `      | Name of the database e.g., `my-inventory`.                                                                          |
+| `DB_PORT`       | TCP port that database is running on.                                                                               |
+| `DB_HOST`       | The host to deploy my-inventory to. Use `localhost` for local deployments and `mysql` for docker compose deployment |
+| `APP_PORT`      | Port that the server will use.                                                                                      |
+| `VITE_APP_PORT` | Equal to `APP_PORT`. Needs to match `APP_PORT` to allow frontend to connect to backend.                             |
 
-## Running the Database
+## Running Using Docker Compose
 
-To run the database:
+To deploy my-inventory using docker compose, simply run the following:
 
 ```bash
 docker compose up
+
+# To rebuild image
+docker compose up --build
 ```
 
-## Running the server
+## Running on Localhost
 
-To run the server:
+To run my-inventory on localhost:
 
 ```bash
 go install # install dependencies
