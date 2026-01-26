@@ -1,16 +1,19 @@
 package app
 
 import (
+	"context"
 	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/gorilla/mux"
 	"log"
+	"my-inventory/internal/model"
 	"net/http"
 	"strconv"
-	"my-inventory/internal/model"
+	"time"
+
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 )
 
 type App struct {
@@ -18,14 +21,46 @@ type App struct {
 	DB     *sql.DB
 }
 
-func (app *App) Initialise(DbUser string, DbPassword string, DbPort string, DbName string) error {
-	connectionString := fmt.Sprintf("%s:%s@tcp(mysql:%s)/%s", DbUser, DbPassword, DbPort, DbName)
+func checkDatabaseConnection(database *sql.DB) {
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+	defer cancel()
+
+	status := "database is up"
+	if err := database.PingContext(ctx); err != nil {
+		status = "database is down"
+	}
+	log.Println(status)
+}
+
+func (app *App) Initialise(DbUser string, DbPassword string, DbHost string, DbPort string, DbName string) error {
+	connectionString := fmt.Sprintf(
+		// connection string should be something like: user:password@tcp(host:port)/db-name
+		"%s:%s@tcp(%s:%s)/%s",
+		DbUser,
+		DbPassword,
+		DbHost,
+		DbPort,
+		DbName,
+	)
+
+	fmt.Println(connectionString)
+
 	var err error
 
+	// if DbHost == "localhost" {
+	// 	fmt.Println(connectionString)
+	// 	} else {
+	// 		fmt.Println(connectionString)
+	// 	}
+	// 	app.DB, err = sql.Open(fmt.Sprint("%s", connectionString), DbHost)
 	app.DB, err = sql.Open("mysql", connectionString)
+
 	if err != nil {
 		return err
 	}
+
+	checkDatabaseConnection(app.DB)
+
 	app.Router = mux.NewRouter().StrictSlash(true)
 	app.handleRoutes()
 

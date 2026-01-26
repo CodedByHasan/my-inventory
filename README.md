@@ -34,7 +34,7 @@ To run the server:
 ```bash
 go install # install dependencies
 go build -o my-inventory cmd/api-server/main.go # build binary
-go run /path/to/binary
+./path/to/binary
 ```
 
 ## Running Frontend

@@ -14,6 +14,7 @@ type EnvConfig struct {
 	DBPassword string
 	DBName     string
 	DBPort     string
+	DBHost     string
 	AppPort    string
 }
 
@@ -63,6 +64,7 @@ func LoadEnvConfig() EnvConfig {
 		DBPassword: LoadEnvVar("DB_PASSWORD"),
 		DBName:     LoadEnvVar("DB_NAME"),
 		DBPort:     LoadEnvVar("DB_PORT"),
+		DBHost:     LoadEnvVar("DB_HOST"),
 		AppPort:    LoadEnvVar("APP_PORT"),
 	}
 }
